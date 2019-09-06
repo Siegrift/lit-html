@@ -1,10 +1,13 @@
 <!doctype html>
 <html>
   <head>
+    <script src="https://wicg.github.io/trusted-types/dist/es5/trustedtypes.build.js"></script>
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+    <!-- Import trusted types polyfill in enforcing mode -->
+    <meta http-equiv="Content-Security-Policy" content="trusted-types test-policy lit-html">
   </head>
   <body>
     <script type="module" src="./lib/trusted-types_test.js"></script>

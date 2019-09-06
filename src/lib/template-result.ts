@@ -20,7 +20,14 @@ import {reparentNodes} from './dom.js';
 import {TemplateProcessor} from './template-processor.js';
 import {boundAttributeSuffix, lastAttributeNameRegex, marker, nodeMarker} from './template.js';
 
-let policy: Pick<TrustedTypePolicy, 'createHTML'>|undefined;
+// tslint:disable-next-line
+const w = window as any
+// TrustedTypes have been renamed to trustedTypes
+// (https://github.com/WICG/trusted-types/issues/177)
+const trustedTypes =
+    (w.trustedTypes || w.TrustedTypes) as TrustedTypePolicyFactory | undefined;
+const policy = trustedTypes &&
+    trustedTypes.createPolicy('lit-html', {createHTML: (s) => s});
 
 /**
  * Turns the value to trusted HTML. If the application uses Trusted Types the
@@ -30,15 +37,6 @@ let policy: Pick<TrustedTypePolicy, 'createHTML'>|undefined;
  */
 function convertConstantTemplateStringToTrustedHTML(value: string): string|
     TrustedHTML {
-  // tslint:disable-next-line
-  const w = window as any
-  // TrustedTypes have been renamed to trustedTypes
-  // (https://github.com/WICG/trusted-types/issues/177)
-  const TrustedTypes =
-      (w.trustedTypes || w.TrustedTypes) as TrustedTypePolicyFactory;
-  if (TrustedTypes && !policy) {
-    policy = TrustedTypes.createPolicy('lit-html', {createHTML: (s) => s});
-  }
   return policy ? policy.createHTML(value) : value;
 }
 
